@@ -1,6 +1,0 @@
-. 如何激活 ai 环境？
-在 VS Code 的 CMD（命令提示符） 终端中，按照以下两步操作：
-
-先初始化 Conda 脚本（告诉终端去哪里找 Conda）： C:\ProgramData\anaconda3\Scripts\activate.bat
-
-再激活你的目标环境： conda activate ai
