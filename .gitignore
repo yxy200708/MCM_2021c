@@ -1,0 +1,13 @@
+# 忽略 Anaconda 环境产生的依赖库
+*.dll
+*.pyd
+*.exe
+.conda/
+.venv/
+
+# 忽略 Python 缓存
+__pycache__/
+
+# 忽略大型数据文件
+*.xlsx
+*.csv
