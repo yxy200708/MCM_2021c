@@ -1,0 +1,22 @@
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 虚拟环境（必须加，文件最多）
+venv/
+env/
+.env/
+
+# 编辑器配置
+.vscode/
+python.code-workspace
+.idea/
+*.swp
+
+# 无关文档（如果这个PDF不是必须提交的，就忽略）
+2021MCM_ProblemC_Vespamandarina.pdf
+
+# Python缓存
+__pycache__/
+*.pyc
+*.pyo
