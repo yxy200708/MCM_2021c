@@ -20,3 +20,6 @@ python.code-workspace
 __pycache__/
 *.pyc
 *.pyo
+
+#相关图片信息
+2021MCM_ProblemC_Files/
