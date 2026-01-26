@@ -88,15 +88,15 @@ def clean_text(text):
     return text
 
 def get_row_base_score(row):
-    status = row['Lab Status']
+    status = str(row.get('Lab Status', '')).lower()
     comment = clean_text(row.get('Lab Comments', ''))
     notes = clean_text(row.get('Notes', ''))
     
     # --- 1. ID 状态赋分 ---
     score = 0
-    if status == 'Positive ID': score = 30.0 # 提高阳性样本基础分
-    elif status == 'Negative ID': score = -15.0 * balance_factor
-    elif status == 'Unverified': score = -2.0
+    if status == 'positive id': score = 30.0 # 提高阳性样本基础分
+    elif status == 'negative id': score = -15.0 * balance_factor
+    elif status == 'unverified': score = -2.0
     
     # --- 2. 专家评论 (Lab Comments) 赋分 ---
     pos_s_strong = ['confirmed', 'positive', 'match', 'correct', 'is a vespa', 'is asian', 'wsda', 'verified']
@@ -145,12 +145,14 @@ for _, row in df.iterrows():
     
     all_words = set(words + comment_words)
     
+    status_lower = str(row.get('Lab Status', '')).lower()
+    
     for word in all_words: #每条记录每个词只计一次权重
         word_total_scores[word] += row_weight
         word_occurrences[word] += 1
-        if row['Lab Status'] == 'Positive ID':
+        if status_lower == 'positive id':
             word_in_pos_notes[word] += 1
-        elif row['Lab Status'] == 'Negative ID':
+        elif status_lower == 'negative id':
             word_in_neg_notes[word] += 1
 
 # --- 第四部分：核心权重计算 ---

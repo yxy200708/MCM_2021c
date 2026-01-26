@@ -71,8 +71,10 @@ PDF_KEYWORDS = {
 }
 
 def train_weights_optimized(train_df):
-    total_pos = len(train_df[train_df['Lab Status'] == 'Positive ID'])
-    total_neg = len(train_df[train_df['Lab Status'] == 'Negative ID'])
+    # Case-insensitive status check
+    train_df['Status_Lower'] = train_df['Lab Status'].astype(str).str.lower()
+    total_pos = len(train_df[train_df['Status_Lower'] == 'positive id'])
+    total_neg = len(train_df[train_df['Status_Lower'] == 'negative id'])
     balance_factor = np.sqrt(total_pos / total_neg) if total_neg > 0 else 1.0
     total_samples = total_pos + total_neg
     
@@ -82,15 +84,15 @@ def train_weights_optimized(train_df):
     word_in_neg_notes = Counter()
     
     def get_row_score(row):
-        status = row['Lab Status']
+        status = str(row.get('Lab Status', '')).lower()
         comment = clean_text(row.get('Lab Comments', ''))
         notes = clean_text(row.get('Notes', ''))
         
         # --- 1. ID 状态赋分 ---
         score = 0
-        if status == 'Positive ID': score = 30.0 # 提高阳性样本基础分
-        elif status == 'Negative ID': score = -15.0 * balance_factor
-        elif status == 'Unverified': score = -2.0
+        if status == 'positive id': score = 30.0 # 提高阳性样本基础分
+        elif status == 'negative id': score = -15.0 * balance_factor
+        elif status == 'unverified': score = -2.0
         
         # --- 2. 专家评论 (Lab Comments) 赋分 ---
         pos_s_strong = ['confirmed', 'positive', 'match', 'correct', 'is a vespa', 'is asian', 'wsda', 'verified']
@@ -124,11 +126,13 @@ def train_weights_optimized(train_df):
         
         all_words = set(words + comment_words)
         
+        status_lower = str(row.get('Lab Status', '')).lower()
+        
         for word in all_words:
             word_total_scores[word] += base_weight
             word_occurrences[word] += 1
-            if row['Lab Status'] == 'Positive ID': word_in_pos_notes[word] += 1
-            elif row['Lab Status'] == 'Negative ID': word_in_neg_notes[word] += 1
+            if status_lower == 'positive id': word_in_pos_notes[word] += 1
+            elif status_lower == 'negative id': word_in_neg_notes[word] += 1
                 
     weights = {}
     for word, count in word_occurrences.items():
