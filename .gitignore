@@ -19,6 +19,7 @@ env/
 *.zip
 *.rar
 *.7z
+*.pdf
 
 # 图片文件 (全局忽略)
 *.png
@@ -27,12 +28,7 @@ env/
 *.gif
 *.bmp
 
-# 特例：允许上传的代码和必要的轻量数据
-!word_weights.csv
-!word_weights_new.csv
-!Small_Sample_Result.xlsx
-!2021MCMProblemC_DataSet.xlsx
-!model_verification_result.png
+# 排除特例 (仅保留代码相关的配置文件)
 !requirements.txt
 
 # 忽略大型目录

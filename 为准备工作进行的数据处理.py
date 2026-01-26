@@ -2,16 +2,14 @@ import pandas as pd
 import numpy as np
 from sklearn.decomposition import TruncatedSVD
 
-# 1. 加载数据 (直接读取你的 .xlsx 文件)
-# 使用 read_excel 彻底避免 read_csv 的编码(Unicode)问题
+# 1. 加载数据 (改为读取清洗后的 CSV 文件)
 try:
-    df_main = pd.read_excel('2021MCMProblemC_DataSet.xlsx')
-    df_images = pd.read_excel('2021MCM_ProblemC_Images_by_GlobalID.xlsx')
+    df_main = pd.read_csv('Cleaned_DataSet_v3.csv')
+    df_images = pd.read_csv('Cleaned_Images_v3.csv')
+    print("成功读取清洗后的 CSV 数据。")
 except Exception as e:
-    print(f"读取失败，请确保文件名完全正确且已安装 openpyxl。错误信息: {e}")
-    # 如果你确定是 CSV，请取消下面两行的注释：
-    # df_main = pd.read_csv('2021MCMProblemC_DataSet.xlsx', encoding='ISO-8859-1')
-    # df_images = pd.read_csv('2021MCM_ProblemC_Images_by_GlobalID.xlsx', encoding='ISO-8859-1')
+    print(f"读取失败，请确保 Cleaned_DataSet_v3.csv 和 Cleaned_Images_v3.csv 存在。错误信息: {e}")
+    exit()
 
 # --- 核心修复：清洗 GlobalID 确保匹配 ---
 def clean_id(s):
@@ -22,12 +20,9 @@ def clean_id(s):
 df_main['Match_ID'] = df_main['GlobalID'].apply(clean_id)
 df_images['Match_ID'] = df_images['GlobalID'].apply(clean_id)
 
-# 2. 时间筛选（前4个月）
+# 2. 移除时间筛选，处理整个 12 个月的数据
 df_main['Submission Date'] = pd.to_datetime(df_main['Submission Date'])
-start_date = df_main['Submission Date'].min()
-end_date = start_date + pd.DateOffset(months=4)
-df_filtered = df_main[(df_main['Submission Date'] >= start_date) & 
-                          (df_main['Submission Date'] < end_date)].copy()
+df_filtered = df_main.copy() # 不再进行时间切片
 
 # 3. 统计图片
 image_counts = df_images.groupby('Match_ID').size().reset_index(name='img_count')
@@ -67,5 +62,5 @@ final_df['Img_Model_Score'] = final_df['Img_Model_Score'].round(4)
 final_df.to_csv('data.csv', index=False)
 
 print(f"清洗完成！")
-print(f"前4个月记录总数: {len(final_df)}")
+print(f"12个月记录总数: {len(final_df)}")
 print(f"带图片记录数: {final_df['Has_Image'].sum()}")
