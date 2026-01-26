@@ -2,11 +2,52 @@ import pandas as pd
 import re
 from collections import Counter
 import numpy as np
+import os
 
-# 加载数据
-df = pd.read_csv('2021MCMProblemC_DataSet.xlsx - Sheet1.csv')
+# --- 第一部分：加载数据（优化读取逻辑） ---
+DATA_FILE = '2021MCMProblemC_DataSet.xlsx'
 
-# --- 第一部分：计算样本平衡系数 ---
+def load_data(file_path):
+    if not os.path.exists(file_path):
+        # 尝试寻找同名的 CSV 文件
+        csv_path = file_path.replace('.xlsx', '.csv')
+        if os.path.exists(csv_path):
+            print(f"未找到 {file_path}，正在读取 {csv_path}...")
+            # 增加编码兼容性
+            try:
+                return pd.read_csv(csv_path, encoding='utf-8')
+            except UnicodeDecodeError:
+                return pd.read_csv(csv_path, encoding='gbk')
+        else:
+            raise FileNotFoundError(f"找不到数据文件：{file_path} 或 {csv_path}")
+    
+    print(f"正在读取 {file_path}...")
+    if file_path.endswith('.xlsx'):
+    
+        return pd.read_excel(file_path)
+    else:
+        return pd.read_csv(file_path)
+
+try:
+    df = load_data(DATA_FILE)
+except Exception as e:
+    print(f"读取失败: {e}")
+    # 提供备选方案或退出
+    exit()
+
+# --- 第二部分：计算样本平衡系数 ---
+# 检查列名是否存在，增加容错
+REQUIRED_COLS = ['Lab Status', 'Lab Comments', 'Notes']
+for col in REQUIRED_COLS:
+    if col not in df.columns:
+        # 模糊匹配列名（处理空格或大小写）
+        matches = [c for c in df.columns if col.lower().replace(' ', '') in c.lower().replace(' ', '')]
+        if matches:
+            df.rename(columns={matches[0]: col}, inplace=True)
+            print(f"列名重映射: {matches[0]} -> {col}")
+        else:
+            print(f"警告：找不到必需的列 {col}")
+
 total_pos = len(df[df['Lab Status'] == 'Positive ID'])
 total_neg = len(df[df['Lab Status'] == 'Negative ID'])
 balance_factor = total_pos / total_neg if total_neg > 0 else 1
@@ -89,5 +130,11 @@ for word, count in word_occurrences.items():
         })
 
 weight_df = pd.DataFrame(final_weights).sort_values(by='final_weight', ascending=False)
-weight_df.to_csv('agh_v4_robust_weights.csv', index=False)
+try:
+    weight_df.to_csv('word_weights.csv', index=False)
+    print("结果已保存至 word_weights.csv")
+except PermissionError:
+    new_filename = 'word_weights_new.csv'
+    weight_df.to_csv(new_filename, index=False)
+    print(f"警告：word_weights.csv 被占用，结果已保存至 {new_filename}")
 print(weight_df.head(15))
