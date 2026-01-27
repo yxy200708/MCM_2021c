@@ -2,21 +2,46 @@
 .DS_Store
 Thumbs.db
 
-# 虚拟环境（必须加，文件最多）
+# 虚拟环境
+.conda/
 venv/
 env/
-.env/
+*.env
+
+# R 语言生成文件
+.RData
+.Rhistory
+.Rproj.user
+
+# 数据文件 (全局忽略)
+*.xlsx
+*.csv
+*.zip
+*.rar
+*.7z
+*.pdf
+
+# 图片文件 (全局忽略)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+
+# 排除特例 (仅保留代码相关的配置文件)
+!requirements.txt
+
+# 忽略大型目录
+2021MCM_ProblemC_Files/
+Processed_Data_Optimized.xlsx
+
+# Python缓存
+__pycache__/
+*.pyc
+*.pyo
 
 # 编辑器配置
 .vscode/
 python.code-workspace
 .idea/
 *.swp
-
-# 无关文档（如果这个PDF不是必须提交的，就忽略）
-2021MCM_ProblemC_Vespamandarina.pdf
-
-# Python缓存
-__pycache__/
-*.pyc
-*.pyo

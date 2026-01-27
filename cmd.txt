@@ -4,3 +4,10 @@
 先初始化 Conda 脚本（告诉终端去哪里找 Conda）： C:\ProgramData\anaconda3\Scripts\activate.bat
 
 再激活你的目标环境： conda activate ai
+
+
+git add .
+
+git commit -m "你的修改说明"
+
+git push
