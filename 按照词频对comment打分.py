@@ -1,3 +1,22 @@
+"""
+MCM Project: Text Scoring Model (NLP)
+=====================================
+功能说明：
+本脚本 (`按照词频对comment打分.py`) 是 `词频统计3.0.py` (训练权重) 和 `词频统计测试.py` (模型验证) 的 **功能超集与工程化封装**。
+它整合了词权重训练、阈值优化、概率预测和数据评分的完整流程，是最终用于生产环境（为入侵检测模型提供 Text_Model_Score）的核心脚本。
+
+核心算法优势 (Robustness & Innovation):
+1.  **专家知识融合 (Expert Knowledge Fusion)**:
+    -   不完全依赖数据统计，而是引入 `PDF_KEYWORDS` (基于生物学论文的先验知识) 对权重进行修正。
+    -   例如：'orange head', 'ground nest' 等特征获得额外加权，即使在训练数据中出现频率较低。
+2.  **贝叶斯对数几率 (Bayesian Log-Odds Ratio)**:
+    -   使用平滑后的 Log-Odds 衡量单词对 Positive/Negative 类别的区分度，避免小样本带来的极端权重。
+3.  **自适应阈值优化 (Adaptive Thresholding)**:
+    -   通过 F1-Score 和 Kappa 系数自动寻找最佳分类阈值，并基于此阈值将原始得分校准为 0-1 的概率值。
+4.  **抗噪设计**:
+    -   针对 Lab Comments 和 Notes 分别处理，利用 Lab Comments 中的专家确认信息增强模型置信度。
+"""
+
 import pandas as pd
 import numpy as np
 import re

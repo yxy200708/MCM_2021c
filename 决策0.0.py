@@ -1,3 +1,16 @@
+"""
+MCM Project: Decision Model Prototype (Legacy/Initial Version)
+==============================================================
+功能说明：
+本脚本 (`决策0.0.py`) 是决策模型的 **早期原型**。
+它实现了基础的 Haversine 距离计算和简单的加权逻辑，用于初步跑通数据流程。
+
+注意：
+-   **正式模型** 请参考 `决策+扩散+优先级invasion_model.py`。
+-   本脚本保留用于对比或作为简化版逻辑的参考。
+-   它包含基础的“用户信誉”更新逻辑和简单的阈值判定。
+"""
+
 import pandas as pd
 import numpy as np
 

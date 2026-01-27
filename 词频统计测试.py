@@ -1,3 +1,21 @@
+"""
+MCM Project: Text Model Validation (Cross-Validation)
+=====================================================
+功能说明：
+本脚本 (`词频统计测试.py`) 专注于 **模型评估与可视化**。
+它使用 5-Fold 交叉验证 (5-Fold CV) 来评估文本评分模型的泛化能力，并生成评估报告图表。
+
+与 `按照词频对comment打分.py` 的关系：
+-   本脚本用于 **证明模型的有效性**（生成 ROC 曲线、混淆矩阵、PR 曲线）。
+-   它不输出最终的评分文件，而是输出 `model_verification_result.png` 用于论文写作。
+-   核心算法逻辑与 `按照词频对comment打分.py` 保持一致，但增加了交叉验证的循环结构。
+
+可视化输出：
+1.  **ROC Curve**: 展示模型在不同阈值下的 TPR vs FPR，AUC 指标反映整体性能。
+2.  **PR Curve**: 在类别不平衡情况下（Positive 样本少），PR 曲线更能反映真实性能。
+3.  **Confusion Matrix**: 展示误报 (False Positive) 和漏报 (False Negative) 情况。
+"""
+
 import pandas as pd
 import numpy as np
 import re

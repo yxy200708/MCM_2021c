@@ -1,3 +1,20 @@
+"""
+MCM Project: Word Weight Training (Research Version)
+====================================================
+功能说明：
+本脚本 (`词频统计3.0.py`) 主要用于 **探索性数据分析 (EDA)** 和 **词权重计算逻辑的初步验证**。
+它的主要产出是 `word_weights.csv`，用于人工审查哪些单词被模型视为高权重特征。
+
+与 `按照词频对comment打分.py` 的关系：
+-   本脚本是 **过程性文件**，侧重于计算和展示每个单词的 `final_weight`、`lod_score` (区分度) 和 `base_score`。
+-   它帮助我们筛选出有效的 `PDF_KEYWORDS` 和验证贝叶斯逻辑的合理性。
+-   **生产环境** 请使用 `按照词频对comment打分.py`，后者包含了完整的预测和评分管线。
+
+核心逻辑：
+1.  **Log-Odds Ratio**: 计算单词在正负样本中出现的概率比的对数。
+2.  **Theory Boost**: 如果单词在 PDF 论文描述的特征中，给予额外加权 (3.0)。
+"""
+
 import pandas as pd
 import re
 from collections import Counter

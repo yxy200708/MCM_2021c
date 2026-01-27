@@ -1,3 +1,26 @@
+"""
+MCM Project: Multi-Modal Invasion Detection Model (Final Decision Engine)
+=========================================================================
+功能说明：
+本脚本实现了 **多模态融合 (Multi-Modal Fusion)** 和 **时空动态更新 (Spatio-Temporal Update)** 的最终决策逻辑。
+它模拟了随着时间推移，基于用户提交的报告不断更新“确信点 (Certified Points)”和“用户信誉 (User Reputation)”的过程。
+
+核心模型 (The "Invasion Model"):
+1.  **多模态融合 (Evidence Fusion)**:
+    -   $ Score_{final} = R_{user} \\times (w_L \\cdot S_{loc} + w_T \\cdot S_{text} + w_V \\cdot S_{img}) $
+    -   结合了 **空间邻近度 (Location)**、**文本描述 (Text)** 和 **图像证据 (Image)**。
+    -   $R_{user}$: 用户信誉系数，随历史准确率动态更新，体现了“众包数据的自我清洗”能力。
+
+2.  **动态优先级 (Dynamic Priority)**:
+    -   根据报告点与当前确信入侵前沿的距离，将报告划分为不同优先级：
+        -   **P1 Frontier (Critical)**: 扩散前沿，最具预警价值，需人工严查。
+        -   **P2 Known Area**: 已知感染区，价值较低。
+        -   **P3 Core**: 核心重灾区。
+
+3.  **时空扩散模拟**:
+    -   `certified_points` 列表随时间动态增长，模拟了入侵范围的扩大，从而改变后续报告的空间得分 ($S_{loc}$)。
+"""
+
 import pandas as pd
 import numpy as np
 from haversine import haversine  # 注意：这个库的函数参数是 (纬度,经度) 的元组
